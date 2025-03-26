@@ -4,6 +4,7 @@ import eyed3
 from transcriptron import Transcriptor 
 
 class TestTranscriptorMethods(unittest.TestCase):
+
     def setUp(self):
         self.transcriptor = Transcriptor('testAudio.m4a')
 
@@ -11,13 +12,28 @@ class TestTranscriptorMethods(unittest.TestCase):
         converted_file = pathlib.Path('testAudio.mp3')
         if converted_file.exists():
             converted_file.unlink('testAudio.mp3')
+        transcribed_file = pathlib.Path('testAudio.txt')
+        if transcribed_file.exists():
+            transcribed_file.unlink('testAudio.txt')
 
     def test_convert_to_mp3_should_create_playable_mp3(self):
         converted_file = self.transcriptor.convert_to_mp3()
+
         path_to_converted_file = pathlib.Path(converted_file)
         self.assertTrue(path_to_converted_file.exists(), "Converted MP3 file was not created.")
+
         loaded_mp3 = eyed3.load(converted_file)
         self.assertIsNotNone(loaded_mp3, "Failed to load MP3 file.")
+
+    def test_transcribe_should_return_expected_text(self):
+        transcripted_filename = self.transcriptor.transcribe()
+
+        path_to_transcripted_file = pathlib.Path(transcripted_filename)
+        self.assertTrue(path_to_transcripted_file.exists(), "Transcription file was not created.")
+
+        with open(path_to_transcripted_file) as f:
+            content = f.read()
+            self.assertIn('Ceci est un test', content, "Transcription did not work properly")
 
 if __name__ == '__main__':
     unittest.main()
