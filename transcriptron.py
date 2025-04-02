@@ -1,6 +1,8 @@
 import ffmpeg
-import whisper 
+import sys
+import whisper
 from pathlib import Path
+
 
 class Transcriptor:
 
@@ -12,8 +14,9 @@ class Transcriptor:
         try:
             original_path = Path(self.filename)
             self.mp3_filename = str(original_path.with_suffix('.mp3'))
-            ffmpeg.input(original_path).output(self.mp3_filename, loglevel="quiet").run()
-            return self.mp3_filename 
+            ffmpeg.input(original_path).output(
+                self.mp3_filename, loglevel="quiet").run()
+            return self.mp3_filename
 
         except ffmpeg.Error as e:
             print(f"An error occurred: {e}")
@@ -30,7 +33,12 @@ class Transcriptor:
             file.write(result["text"])
         return txt_filename
 
+
 if __name__ == '__main__':
-    #print(whisperx.available_models())
-    transcriptor = Transcriptor('testAudio.m4a')
+    if len(sys.argv) < 2:
+        print("Usage: python script.py <audio_file>")
+        sys.exit(1)
+
+    audio_file = sys.argv[1]
+    transcriptor = Transcriptor(audio_file)
     transcriptor.transcribe()
