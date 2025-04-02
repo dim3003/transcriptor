@@ -9,21 +9,21 @@ class TestTranscriptorMethods(unittest.TestCase):
         self.transcriptor = Transcriptor('testAudio.m4a')
 
     def tearDown(self):
-        converted_file = pathlib.Path('testAudio.mp3')
+        converted_file = pathlib.Path('testAudio.wav')
         if converted_file.exists():
-            converted_file.unlink('testAudio.mp3')
+            converted_file.unlink('testAudio.wav')
         transcribed_file = pathlib.Path('testAudio.txt')
         if transcribed_file.exists():
             transcribed_file.unlink('testAudio.txt')
 
-    def test_convert_to_mp3_should_create_playable_mp3(self):
-        converted_file = self.transcriptor.convert_to_mp3()
+    def test_convert_to_wav_should_create_playable_wav(self):
+        converted_file = self.transcriptor.convert_to_wav()
 
         path_to_converted_file = pathlib.Path(converted_file)
-        self.assertTrue(path_to_converted_file.exists(), "Converted MP3 file was not created.")
+        self.assertTrue(path_to_converted_file.exists(), "Converted wav file was not created.")
 
-        loaded_mp3 = eyed3.load(converted_file)
-        self.assertIsNotNone(loaded_mp3, "Failed to load MP3 file.")
+        loaded_wav = eyed3.load(converted_file)
+        self.assertIsNotNone(loaded_wav, "Failed to load wav file.")
 
     def test_transcribe_should_return_expected_text(self):
         transcripted_filename = self.transcriptor.transcribe()
